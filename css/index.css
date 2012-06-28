@@ -1,0 +1,27 @@
+body {
+	text-align:center;
+}
+#task {
+	width:80%;
+	height:100px;
+}
+#action {
+	width:30%;
+	height:50px;
+	margin:10px;
+}
+#task-mode {
+	display:none;
+}
+#postpone-options {
+	display:none;
+}
+
+.timeout {
+	background-color:#f00;
+	color:#fff;
+}
+#done {
+	height:50px;
+	width:30%;
+}
