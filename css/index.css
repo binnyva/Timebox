@@ -25,3 +25,8 @@ body {
 	height:50px;
 	width:30%;
 }
+#open-popup {
+	position:absolute;
+	top:95%;
+	left:10px;
+}

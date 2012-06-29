@@ -33,3 +33,6 @@ Time <input type="text" name="time" id="time" value="30" size="4" /> minutes<br 
 <script type="text/javascript">
 var validation_rules = <?php $task = new Task; print json_encode($task->getValidationRules()); ?>;
 </script>
+
+
+<a href="index.php" id="open-popup">Open Popup</a>

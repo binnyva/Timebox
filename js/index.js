@@ -5,6 +5,9 @@ var extended_for = 0;
 function init() {
 	$("#start-task-form").submit(startTaskAction);
 	$("#done-form").submit(endTaskAction);
+	$("#open-popup").click(openPopup);
+	
+	if($(window).width() < 400) $("#open-popup").hide(); // Hide the open popup link in a popup.
 }
 
 
@@ -81,6 +84,13 @@ function taskEnded(data) {
 
 function showPostponeOption() {
 	$("#postpone-options").show();
+}
+
+function openPopup(e) {
+	var url = this.href;
+	window.open(url, "popup_id", "resizable,width=300,height=300");
+	
+	e.preventDefault();
 }
 
 
