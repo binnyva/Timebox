@@ -1,6 +1,8 @@
 var time_in_mins = 0;
 var ticker;
 var extended_for = 0;
+var multiple_tasks = [];
+var multiple_task_index = 0;
 
 function init() {
 	$("#start-task-form").submit(startTaskAction);
@@ -17,20 +19,49 @@ function startTaskAction(e) {
 	if(!check(validation_rules)) return false;
 	
 	var task = $("#task").val();
+	if(!multiple_task_index) {
+		multiple_tasks = task.split("\n");
+		if(multiple_tasks.length > 1) {
+			task = multiple_tasks[multiple_task_index];
+			multiple_task_index++;
+		}
+	}
+	
 	var time = $("#time").val();
 	
+	startTask(task, time);
+	return false;
+}
+
+function startTask(task, time) {
 	$.ajax(	{"url"		: base_url + "api/task/start.php", 
 			"dataType"	: "json", 
 			"data"		: {"task": task, "time": time}, 
 			"type"		: "POST",
 			"success"	: taskStarted
 	});
-	return false;
 }
+
+function nextTask() {
+	console.log("Next - " + multiple_tasks.length +"<"+ multiple_task_index);
+	if(multiple_tasks.length < multiple_task_index+1) {
+		showMessage({"success": "All "+multiple_tasks.length+" tasks done."});
+		$("#task").val("");
+		multiple_task_index = 0;
+		return;
+	}
+	var task = multiple_tasks[multiple_task_index];
+	multiple_task_index++;
+	
+	$("#task").val(task);
+}
+
 
 function taskStarted(data) {
 	$("#start-task").hide();
 	$("#task-mode").show();
+	$("#success-message").hide();
+	$("#error-message").hide();
 	
 	$(".task_id").val(data.success);
 	$("#task-name").html(data.task);
@@ -74,8 +105,12 @@ function taskEnded(data) {
 	var task = $("#task-name").html();
 	var time_taken = data.time_taken;
 	
-	$("#task").val("");
-	$("#time").val(30);
+	if(multiple_task_index > 0) {
+		nextTask();
+	} else {
+		$("#task").val("");
+		$("#time").val(30);
+	}
 	$("#task-mode").hide();
 	$("#start-task").show();
 	

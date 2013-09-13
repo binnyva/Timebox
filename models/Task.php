@@ -11,7 +11,7 @@ class Task extends DBTable {
 	}
 
 	/**
-	 * This will create a new Comic and returns the id of the newly created row.
+	 * This will create a new Task and returns the id of the newly created row.
 	 */
 	function create($task, $time) {
 		$validation_rules = $this->getValidationRules();
