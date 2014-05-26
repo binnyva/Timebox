@@ -1,8 +1,6 @@
 <?php
 $_SESSION['user_id'] = 1;
 
-
-
 /// Get the time difference between the two given time and returns it as an hour, minute array
 function getTimeDifference($from, $to, $return_type='hour_min') {
 	// The argument can be a timestamp or a mysql date string - both are parsed correctly

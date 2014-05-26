@@ -1,4 +1,5 @@
 var time_in_mins = 0;
+var total_time_mins = 0;
 var ticker;
 var extended_for = 0;
 var multiple_tasks = [];
@@ -43,7 +44,6 @@ function startTask(task, time) {
 }
 
 function nextTask() {
-	console.log("Next - " + multiple_tasks.length +"<"+ multiple_task_index);
 	if(multiple_tasks.length < multiple_task_index+1) {
 		showMessage({"success": "All "+multiple_tasks.length+" tasks done."});
 		$("#task").val("");
@@ -56,7 +56,6 @@ function nextTask() {
 	$("#task").val(task);
 }
 
-
 function taskStarted(data) {
 	$("#start-task").hide();
 	$("#task-mode").show();
@@ -67,8 +66,10 @@ function taskStarted(data) {
 	$("#task-name").html(data.task);
 	
 	time_in_mins = data.time;
+	total_time_mins = time_in_mins;
 	tick();
 	ticker = window.setInterval(tick, 60000);
+	$("#progress").css({"width":"0%"});
 }
 
 // Runs every one minute.
@@ -79,6 +80,13 @@ function tick() {
 
 	var time = convertHourMinFormat(time_in_mins);
 	$("#task-time").html(time);
+
+	var percent_complete = 0;
+	if(total_time_mins != time_in_mins && time_in_mins < total_time_mins) {
+		percent_complete = Math.floor((total_time_mins - time_in_mins) / total_time_mins * 100);
+		$("#progress").css({"width":percent_complete+"%"});
+	}
+
 	time_in_mins--;
 }
 
@@ -92,7 +100,6 @@ function endTaskAction(e) {
 	extended_for = 0;
 	window.clearInterval(ticker);
 	
-	
 	$.ajax(	{"url"		: base_url + "api/task/end.php", 
 			"dataType"	: "json", 
 			"data"		: {"task_id": task_id}, 
@@ -104,6 +111,8 @@ function endTaskAction(e) {
 function taskEnded(data) {
 	var task = $("#task-name").html();
 	var time_taken = data.time_taken;
+
+	var sound = new Howl({  urls: ['js/library/bell.mp3']}).play();
 	
 	if(multiple_task_index > 0) {
 		nextTask();
@@ -113,6 +122,7 @@ function taskEnded(data) {
 	}
 	$("#task-mode").hide();
 	$("#start-task").show();
+	$("#progress").css({"width":"0%"});
 	
 	showMessage({"success": "Task '"+task+"' done in "+time_taken});
 }

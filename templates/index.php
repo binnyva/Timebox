@@ -1,9 +1,10 @@
+<div id="progress"></div>
 <div id="start-task">
 <h2>New Task</h2>
 
 <form action="" method="post" id="start-task-form">
-<textarea name="task" id="task" rows="5" cols="30"></textarea><br />
-Time <input type="text" name="time" id="time" value="30" size="4" /> minutes<br />
+<textarea name="task" id="task" rows="5" cols="30" autofocus>Test Data</textarea><br />
+Time <input type="text" name="time" id="time" value="5" size="4" /> minutes<br />
 <input type="submit" value="Start Task" name="action" id="action" />
 </form>
 </div>
@@ -12,8 +13,6 @@ Time <input type="text" name="time" id="time" value="30" size="4" /> minutes<br 
 <h3 id="task-name"></h3>
 
 <h1 id="task-time"></h1>
-
-<div id="progress-bar"><div id="over-bar"></div></div>
 
 <!--
 <a onclick="postpone(5)">Give me 5 more mins!</a> <a onclick="showPostponeOption()">+</a>

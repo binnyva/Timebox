@@ -30,3 +30,12 @@ body {
 	top:95%;
 	left:10px;
 }
+#progress {
+	background-color:#f1632a;
+	height:100%;
+	width:0;
+	position: absolute;
+	top:0;
+	left: 0;
+	z-index: -10;
+}

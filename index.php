@@ -1,6 +1,5 @@
 <?php
 require("./common.php");
 
-$message = "Hello World";
-
+$template->addResource('library/howler.min.js', 'js');
 render();
