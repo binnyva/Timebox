@@ -17,9 +17,17 @@ function init() {
 }
 
 function pomodoroMode() {
-	pomodoro_mode = true;
-	$("#normal-mode").hide();
-	$("#pomodoro-mode").show();
+	if(pomodoro_mode) {
+		pomodoro_mode = false;
+		$("#normal-mode").show();
+		$("#pomodoro-mode").hide();
+		$("#pomodoro-mode-switch").text("Pomodoro Mode");
+	} else {
+		pomodoro_mode = true;
+		$("#normal-mode").hide();
+		$("#pomodoro-mode").show();
+		$("#pomodoro-mode-switch").text("Turn off Pomodoro");
+	}
 }
 
 

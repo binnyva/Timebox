@@ -4,8 +4,8 @@
 
 <div id="normal-mode">
 <form action="" method="post" id="start-task-form">
-<textarea name="task" id="task" rows="5" cols="30" autofocus>Test Data</textarea><br />
-Time <input type="text" name="time" id="time" value="5" size="4" /> minutes<br />
+<textarea name="task" id="task" rows="5" cols="30" autofocus></textarea><br />
+Time <input type="text" name="time" id="time" value="15" size="4" /> minutes<br />
 <input type="submit" value="Start" name="action" class="action" id="action" />
 </form>
 </div>
