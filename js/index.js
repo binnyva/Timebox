@@ -7,11 +7,12 @@ var multiple_task_index = 0;
 var pomodoro_mode = false;
 
 function init() {
-	$("#start-task-form").submit(startTaskAction);
-	$("#done-form").submit(endTaskAction);
+	$("#action").click(startTaskAction);
+	$("#done").click(endTaskAction);
+	$("#cancel").click(cancelPomodoro);
 	$("#open-popup").click(openPopup);
 	$("#pomodoro-start").click(pomodoroStart);
-	$("#pomodoro-mode-switch").click(pomodoroMode);
+	$("#mode-switch").click(pomodoroMode);
 	
 	if($(window).width() < 400) $("#open-popup").hide(); // Hide the open popup link in a popup.
 }
@@ -19,15 +20,18 @@ function init() {
 function pomodoroMode() {
 	if(pomodoro_mode) {
 		pomodoro_mode = false;
-		$("#normal-mode").show();
-		$("#pomodoro-mode").hide();
-		$("#pomodoro-mode-switch").text("Pomodoro Mode");
+		$("#mode-switch").text("Switch to Pomodoro Mode");
+		$("#mode").text("TimeBox");
 	} else {
 		pomodoro_mode = true;
-		$("#normal-mode").hide();
-		$("#pomodoro-mode").show();
-		$("#pomodoro-mode-switch").text("Turn off Pomodoro");
+		$("#task").val("Tomato")
+		$("#pomodoro-start").focus();
+		$("#mode").text("Pomodoro");
+		$("#mode-switch").text("Switch to TimeBox Mode");
 	}
+
+	$("#normal-mode").toggle();
+	$("#pomodoro-mode").toggle();
 }
 
 
@@ -38,10 +42,16 @@ function pomodoroStart() {
 }
 function endPomodoro() {
 	endTask();
+	var break_time = 5;
 	var sound = new Howl({  urls: ['js/library/bell.mp3']}).play();
-	if(confirm("Tomato Done. Rest for 5 minutes?")) {
-		startTask("Break", 5);
+	if(confirm("Tomato Done. Rest for "+break_time+" minutes?")) {
+		startTask("Break", break_time);
+		setTimeout(endPomodoro, break_time * 60 * 1000);
 	}
+}
+function cancelPomodoro() {
+	console.log("Cancelling...");
+	endTask('cancel');
 }
 
 
@@ -66,7 +76,6 @@ function startTaskAction(e) {
 }
 
 function startTask(task, time) {
-	console.log(task, time);
 	$.ajax(	{"url"		: base_url + "api/task/start.php", 
 			"dataType"	: "json", 
 			"data"		: {"task": task, "time": time}, 
@@ -93,6 +102,14 @@ function taskStarted(data) {
 	$("#task-mode").show();
 	$("#success-message").hide();
 	$("#error-message").hide();
+
+	if(pomodoro_mode) {
+		$("#done").hide();
+		$("#cancel").show();
+	} else {
+		$("#done").show();
+		$("#cancel").hide();
+	}
 	
 	$(".task_id").val(data.success);
 	$("#task-name").html(data.task);
@@ -123,7 +140,8 @@ function tick() {
 	time_in_mins--;
 }
 
-function endTask() {
+function endTask(status) {
+	if(!status) status = 'end';
 	$("body").removeClass("timeout");
 	var task_id = $("#task_id-done").val();
 
@@ -133,7 +151,7 @@ function endTask() {
 	$("#start-task").show();
 	$("#progress").css({"width":"0%"});
 	
-	$.ajax(	{"url"		: base_url + "api/task/end.php", 
+	$.ajax(	{"url"		: base_url + "api/task/"+status+".php", 
 			"dataType"	: "json", 
 			"data"		: {"task_id": task_id}, 
 			"type"		: "POST",

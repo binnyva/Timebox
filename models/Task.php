@@ -39,12 +39,18 @@ class Task extends DBTable {
 		
 		return array('success'=>$task_id, 'error'=>false, "task"=>$task, "time"=>$time_in_minutes);
 	}
-	
-	function end($task_id) {
+
+
+	function cancel($task_id) {
+		return $this->end($task_id, 'cancelled');
+	}
+
+
+	function end($task_id, $status = 'done') {
 		$this->find($task_id);
 		$start_on = $this->field['start_on'];
 		$this->field['end_on'] = 'NOW()';
-		$this->field['status'] = 'done';
+		$this->field['status'] = $status;
 		$this->save();
 		
 		$time_taken = getTimeDifference($start_on, date('Y-m-d H:i:s'));

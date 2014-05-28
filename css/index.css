@@ -21,11 +21,11 @@ body {
 	background-color:#f00;
 	color:#fff;
 }
-#done {
+#done, #cancel {
 	height:50px;
 	width:30%;
 }
-#pomodoro-mode-switch {
+#mode-switch {
 	position:absolute;
 	top:0;
 	left:10px;
@@ -46,5 +46,8 @@ body {
 }
 
 #pomodoro-mode {
+	display: none;
+}
+#cancel {
 	display: none;
 }
