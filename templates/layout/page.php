@@ -32,7 +32,9 @@ include($GLOBALS['template']->template);
 //Global Variables...
 var base_url = "<?php echo $abs ?>";
 </script>
-<script src="<?=$abs?>js/library/jquery.js" type="text/javascript"></script>
+<script src="<?=$abs?>bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
+<script src="<?=$abs?>bower_components/howler/howler.min.js" type="text/javascript"></script>
+<script src="<?=$abs?>bower_components/jquery-cookie/jquery.cookie.js" type="text/javascript"></script>
 <script src="<?=$abs?>js/application.js" type="text/javascript"></script>
 <?=$js_includes?>
 </body>

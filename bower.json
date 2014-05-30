@@ -1,0 +1,30 @@
+{
+  "name": "Timebox",
+  "version": "1.00.A",
+  "homepage": "https://github.com/binnyva/Timebox",
+  "authors": [
+    "Binny V A <binnyva@gmail.com>"
+  ],
+  "description": "Tool to timebox your tasks. Includes a Pomodoro technique mode as well\"",
+  "main": "index.php",
+  "keywords": [
+    "timebox",
+    "pomodoro",
+    "productivity",
+    "time"
+  ],
+  "license": "BSD",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "howler": "~1.1.20",
+    "jquery-cookie": "~1.4.1"
+  }
+}

@@ -4,7 +4,7 @@ var ticker;
 var extended_for = 0;
 var multiple_tasks = [];
 var multiple_task_index = 0;
-var pomodoro_mode = false;
+var mode = "timebox";
 
 function init() {
 	$("#action").click(startTaskAction);
@@ -18,16 +18,20 @@ function init() {
 }
 
 function pomodoroMode() {
-	if(pomodoro_mode) {
-		pomodoro_mode = false;
-		$("#mode-switch").text("Switch to Pomodoro Mode");
+	if(mode == "pomodoro") {
+		mode = "timebox";
 		$("#mode").text("TimeBox");
+		$("#mode-switch").text("Switch to Pomodoro Mode");
+
+		$("#task").val("");
+		$("#task").focus();
 	} else {
-		pomodoro_mode = true;
-		$("#task").val("Tomato")
-		$("#pomodoro-start").focus();
+		mode = "pomodoro";
 		$("#mode").text("Pomodoro");
 		$("#mode-switch").text("Switch to TimeBox Mode");
+
+		$("#task").val("Tomato");
+		$("#pomodoro-start").focus();
 	}
 
 	$("#normal-mode").toggle();
@@ -37,20 +41,24 @@ function pomodoroMode() {
 
 function pomodoroStart() {
 	var tomato_time = 25;
-	startTask("Tomato", tomato_time);
+	var task = $("#task").val();
+	if(!task) task = "Tomato"
+	startTask(task, tomato_time);
 	setTimeout(endPomodoro, tomato_time * 60 * 1000);
 }
-function endPomodoro() {
+function endPomodoro(type) {
 	endTask();
-	var break_time = 5;
-	var sound = new Howl({  urls: ['js/library/bell.mp3']}).play();
-	if(confirm("Tomato Done. Rest for "+break_time+" minutes?")) {
-		startTask("Break", break_time);
-		setTimeout(endPomodoro, break_time * 60 * 1000);
+	var sound = new Howl({  urls: ['images/sounds/bell.mp3']}).play();
+
+	if(type != 'break') {
+		var break_time = 5;
+		if(confirm("Tomato Done. Rest for "+break_time+" minutes?")) {
+			startTask("Break", break_time);
+			setTimeout(function() { endPomodoro('break'); }, break_time * 60 * 1000);
+		}
 	}
 }
 function cancelPomodoro() {
-	console.log("Cancelling...");
 	endTask('cancel');
 }
 
@@ -78,7 +86,7 @@ function startTaskAction(e) {
 function startTask(task, time) {
 	$.ajax(	{"url"		: base_url + "api/task/start.php", 
 			"dataType"	: "json", 
-			"data"		: {"task": task, "time": time}, 
+			"data"		: {"task": task, "time": time, "mode": mode}, 
 			"type"		: "POST",
 			"success"	: taskStarted
 	});
@@ -103,7 +111,7 @@ function taskStarted(data) {
 	$("#success-message").hide();
 	$("#error-message").hide();
 
-	if(pomodoro_mode) {
+	if(mode == "pomodoro") {
 		$("#done").hide();
 		$("#cancel").show();
 	} else {
@@ -125,7 +133,7 @@ function taskStarted(data) {
 function tick() {
 	if(time_in_mins == 0) {
 		$("body").addClass("timeout");
-		var sound = new Howl({  urls: ['js/library/bell.mp3']}).play();
+		var sound = new Howl({  urls: ['images/sounds/bell.mp3']}).play();
 	}
 
 	var time = convertHourMinFormat(time_in_mins);
@@ -150,19 +158,21 @@ function endTask(status) {
 	$("#task-mode").hide();
 	$("#start-task").show();
 	$("#progress").css({"width":"0%"});
-	
+	loading();
 	$.ajax(	{"url"		: base_url + "api/task/"+status+".php", 
 			"dataType"	: "json", 
-			"data"		: {"task_id": task_id}, 
+			"data"		: {"task_id": task_id, "mode": mode}, 
 			"type"		: "POST",
 			"success"	: function(data) {
-				if(pomodoro_mode) {
-
-				} else {
+				console.log("Success")
+				loaded();
+				if(mode == "timebox") {
 					taskEnded(data);
+				} else {
+					if(status == "cancel") taskCancelled(data);
 				}
 			}
-	});
+		});
 }
 
 // Called when the user clicks the Done button.
@@ -187,6 +197,13 @@ function taskEnded(data) {
 	}
 	
 	showMessage({"success": "Task '"+task+"' done in "+time_taken});
+}
+
+function taskCancelled(data) {
+	var task = $("#task-name").html();
+	$("#task").val("Tomato");
+	
+	showMessage({"error": "Task Cancelled"});
 }
 
 function showPostponeOption() {
