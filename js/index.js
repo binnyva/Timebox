@@ -4,6 +4,8 @@ var ticker;
 var extended_for = 0;
 var multiple_tasks = [];
 var multiple_task_index = 0;
+var tomato_time = 25;
+var break_time = 5;
 var mode = "timebox";
 
 function init() {
@@ -40,18 +42,16 @@ function pomodoroMode() {
 
 
 function pomodoroStart() {
-	var tomato_time = 25;
 	var task = $("#task").val();
 	if(!task) task = "Tomato"
 	startTask(task, tomato_time);
 	setTimeout(endPomodoro, tomato_time * 60 * 1000);
 }
 function endPomodoro(type) {
-	endTask();
+	endTask(type);
 	var sound = new Howl({  urls: ['images/sounds/bell.mp3']}).play();
 
 	if(type != 'break') {
-		var break_time = 5;
 		if(confirm("Tomato Done. Rest for "+break_time+" minutes?")) {
 			startTask("Break", break_time);
 			setTimeout(function() { endPomodoro('break'); }, break_time * 60 * 1000);
@@ -87,7 +87,7 @@ function startTask(task, time) {
 	$.ajax(	{"url"		: base_url + "api/task/start.php", 
 			"dataType"	: "json", 
 			"data"		: {"task": task, "time": time, "mode": mode}, 
-			"type"		: "POST",
+			"type"		: "GET",
 			"success"	: taskStarted
 	});
 }
@@ -162,9 +162,8 @@ function endTask(status) {
 	$.ajax(	{"url"		: base_url + "api/task/"+status+".php", 
 			"dataType"	: "json", 
 			"data"		: {"task_id": task_id, "mode": mode}, 
-			"type"		: "POST",
+			"type"		: "GET",
 			"success"	: function(data) {
-				console.log("Success")
 				loaded();
 				if(mode == "timebox") {
 					taskEnded(data);
