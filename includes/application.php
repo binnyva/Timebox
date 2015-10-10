@@ -7,6 +7,11 @@ if(strpos($config['PHP_SELF'], '/user/profile.php') !== false) checkUser();
 function checkUser($check_admin = false) {
 	global $config;
 	
+	if(isset($config['single_user']) and $config['single_user']) {
+		$_SESSION['user_id'] = $config['single_user'];
+		return true;
+	}
+	
 	if((!isset($_SESSION['user_id']) or !$_SESSION['user_id']))
 		showMessage("Please login to use this feature", $config['site_home'] . 'user/login.php', "error");
 }

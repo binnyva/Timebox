@@ -46,8 +46,18 @@ body {
 }
 
 #pomodoro-mode {
+	display: block;
+}
+#normal-mode {
 	display: none;
 }
+
 #cancel {
 	display: none;
+}
+
+#settings-link {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }

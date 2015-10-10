@@ -1,12 +1,13 @@
 var time_in_mins = 0;
 var total_time_mins = 0;
 var ticker;
+var pomodoro_ticker;
 var extended_for = 0;
 var multiple_tasks = [];
 var multiple_task_index = 0;
 var tomato_time = 25;
 var break_time = 5;
-var mode = "timebox";
+var mode = "pomodoro";
 
 function init() {
 	$("#action").click(startTaskAction);
@@ -45,7 +46,7 @@ function pomodoroStart() {
 	var task = $("#task").val();
 	if(!task) task = "Tomato"
 	startTask(task, tomato_time);
-	setTimeout(endPomodoro, tomato_time * 60 * 1000);
+	pomodoro_ticker = setTimeout(endPomodoro, tomato_time * 60 * 1000);
 }
 function endPomodoro(type) {
 	endTask(type);
@@ -54,12 +55,13 @@ function endPomodoro(type) {
 	if(type != 'break') {
 		if(confirm("Tomato Done. Rest for "+break_time+" minutes?")) {
 			startTask("Break", break_time);
-			setTimeout(function() { endPomodoro('break'); }, break_time * 60 * 1000);
+			pomodoro_ticker = setTimeout(function() { endPomodoro('break'); }, break_time * 60 * 1000);
 		}
 	}
 }
 function cancelPomodoro() {
 	endTask('cancel');
+	clearTimeout(pomodoro_ticker);
 }
 
 

@@ -1,10 +1,10 @@
 <div id="progress"></div>
 <div id="start-task">
-<h2 id="mode">TimeBox</h2>
+<h2 id="mode">Pomodoro</h2>
 
 
 <form action="" method="post" id="start-task-form">
-<textarea name="task" id="task" rows="5" cols="30" autofocus></textarea><br />
+<textarea name="task" id="task" rows="5" cols="30" autofocus>Tomato</textarea><br />
 <div id="normal-mode">
 Time <input type="text" name="time" id="time" value="15" size="4" /> minutes<br />
 <input type="button" value="Start" name="action" class="action" id="action" />
@@ -42,5 +42,6 @@ var validation_rules = <?php $task = new Task; print json_encode($task->getValid
 </script>
 
 
-<a href="#" id="mode-switch">Switch to Pomodoro Mode</a>
+<a href="#" id="mode-switch">Switch to TimeBox Mode</a>
 <a href="index.php" id="open-popup">Open Popup</a>
+<a href="settings.php" id="settings-link">Settings</a>
